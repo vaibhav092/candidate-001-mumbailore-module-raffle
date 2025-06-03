@@ -1,4 +1,4 @@
-import raffleDB from '../../lib/raffleDB';
+import raffleDB from '../../lib/raffle.js';
 
 export default function handler(req, res) {
   if (req.method !== 'POST') {
