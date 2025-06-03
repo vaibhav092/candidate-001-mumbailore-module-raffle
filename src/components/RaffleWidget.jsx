@@ -23,18 +23,26 @@ export default function RaffleWidget() {
     };
 
     const joinRaffle = async () => {
-        setLoading(true);
-        setMessage('');
-        try {
-            await axios.post('/api/raffle-entry', { userId });
-            await fetchTickets();
+    setLoading(true);
+    setMessage('');
+    try {
+        const postRes = await axios.post('/api/raffle-entry', { userId });
+        console.log('POST res', postRes.data); 
+        if (postRes.data.success) {
+            const getRes = await axios.get(`/api/raffle-status?userId=${userId}`);
+            console.log('GET res', getRes.data); 
+            setTickets(getRes.data.tickets);
             setMessage('✅ Ticket added!');
-        } catch {
+        } else {
             setMessage('❌ Error, try again.');
-        } finally {
-            setLoading(false);
         }
-    };
+    } catch (error) {
+        console.error('Error:', error); 
+        setMessage('❌ Error, try again.');
+    } finally {
+        setLoading(false);
+    }
+};
 
     return (
         <div className="fixed bottom-4 right-4 z-50">
