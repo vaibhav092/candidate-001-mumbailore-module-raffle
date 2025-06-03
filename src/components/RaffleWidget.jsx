@@ -15,7 +15,7 @@ export default function RaffleWidget() {
 
     const fetchTickets = async () => {
         try {
-            const getRes = await axios.get(`/api/raffle-status?userId=${userId}&t=${Date.now()}`);
+            const getRes = await axios.get(`/api/raffle-status?userId=${userId}}`);
             setTickets(getRes.data.tickets);
         } catch {
             setMessage('❌ Error fetching tickets.');
