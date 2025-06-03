@@ -1,21 +1,13 @@
-export default async function handler(req, res) {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
-    }
+// /api/raffle-entry.js
+import raffleDB from '../../lib/raffleDB';
+
+export default function handler(req, res) {
+    if (req.method !== 'POST') return res.status(405).end();
 
     const { userId } = req.body;
+    if (!userId) return res.status(400).json({ error: 'Missing userId' });
 
-    if (!userId) {
-        return res.status(400).json({ error: 'Missing userId' });
-    }
+    raffleDB[userId] = (raffleDB[userId] || 0) + 1;
 
-    try {
-        // Simulated DB (in-memory)
-        globalThis.raffleDB = globalThis.raffleDB || {};
-        globalThis.raffleDB[userId] = (globalThis.raffleDB[userId] || 0) + 1;
-
-        return res.status(200).json({ success: true, tickets: globalThis.raffleDB[userId],userId});
-    } catch (error) {
-        return res.status(500).json({ error: 'Internal server error' });
-    }
+    res.status(200).json({ success: true, tickets: raffleDB[userId], userId });
 }
